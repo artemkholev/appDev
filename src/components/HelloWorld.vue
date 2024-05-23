@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="header">header</div>
+    <div class="header">header_main</div>
     <div class="container">
       <h1>{{ msg }}</h1>
       <div class="hello" style="display: flex; justify-content: center">
