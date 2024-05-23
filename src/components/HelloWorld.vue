@@ -10,6 +10,7 @@
         </div>
       </div>
     </div>
+    <div class="footer">footer</div>
   </div>
 </template>
 
