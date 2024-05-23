@@ -1,10 +1,11 @@
 <template>
   <div>
+    <div class="header">header</div>
     <h1>{{ msg }}</h1>
     <div class="hello" style="display: flex; justify-content: center">
       <div class="button" style="display: flex; gap: 10px">
         <button @click="increment">+</button>
-        <p class="count">{{ count > 5 ? "7+" : count }}</p>
+        <p class="count">{{ count > 5 ? "5+" : count }}</p>
       </div>
     </div>
   </div>
