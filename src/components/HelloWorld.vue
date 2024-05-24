@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex-direction: column;">
+  <div style="display: flex; flex-direction: column">
     <div class="header">header_main</div>
     <div class="container">
       <h1>{{ msg }}</h1>
@@ -7,7 +7,7 @@
         <div class="button" style="display: flex; gap: 10px">
           <button @click="increment">+</button>
 
-  <p class="count">{{ count > 5 ? "5+" : count }}</p>
+          <p class="count">{{ count > 5 ? "5+" : count }}</p>
         </div>
       </div>
     </div>
