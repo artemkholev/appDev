@@ -17,6 +17,7 @@
 
 nav {
   padding: 30px;
+  background-color: red;
 }
 
 nav a {
