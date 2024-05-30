@@ -10,38 +10,47 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Setup NodeJS Environment ${{ matrix.node-versions }}
-      uses: actions/setup-node@v1.4.2
-      with:
-        node-version: '18.x'
-    - name: Install dependencies
-      run: npm install
-    - name: Build the project
-      run: npm run build
-    - run: zip -r  ./electron-${{ github.run_number }}.zip ./dist/electron/*
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
-        body: Automated Electron Deployment
-        draft: false
-        prerelease: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
-    - name: Upload a Release Asset
-      id: upload_release_asset
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./electron-${{ github.run_number }}.zip
-        asset_name: electron-${{ github.run_number }}.zip
-        asset_content_type: appliction/zip
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Build the project
+        run: npm run build
+
+      - name: Archive production artifacts
+        run: |
+          mkdir -p release
+          cp -r dist/* release/
+        shell: bash
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this release:
+            - List your changes here
+          draft: false
+          prerelease: false
+
+      - name: Upload release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release
+          asset_name: your-asset-name
+          asset_content_type: application/zip
