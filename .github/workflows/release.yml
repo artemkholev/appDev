@@ -37,20 +37,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this release:
-            - List your changes here
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          body: Automated Electron Deployment
           draft: false
           prerelease: false
 
-      - name: Upload release assets
-        uses: actions/upload-release-asset@v1
+      - name: Upload a Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release
-          asset_name: your-asset-name
-          asset_content_type: application/zip
+          asset_path: ./electron-${{ github.run_number }}.zip
+          asset_name: electron-${{ github.run_number }}.zip
+          asset_content_type: appliction/zip
