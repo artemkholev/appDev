@@ -29,15 +29,24 @@ jobs:
       - name: Build the project
         run: npm run build
 
+      - name: Create binary
+        run: |
+          echo "Creating a binary file..."
+          mkdir -p binaries
+          echo "This is a binary file" > binaries/binaryfile.bin
+
       - name: Archive production artifacts
         run: |
           mkdir -p release
-          zip -r release.zip dist/
+          zip -r release/release.zip dist/
         shell: bash
+
+      - name: Verify release artifact
+        run: ls -la release/
 
       - name: Create release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -46,8 +55,10 @@ jobs:
           body: |
             Changes in this release:
             - List your changes here
+          draft: false
+          prerelease: false
 
-      - name: Upload release assets
+      - name: Upload release assets (dist)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,3 +67,13 @@ jobs:
           asset_path: ./release/release.zip
           asset_name: release.zip
           asset_content_type: application/zip
+
+      - name: Upload release assets (binary)
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./binaries/binaryfile.bin
+          asset_name: binaryfile.bin
+          asset_content_type: application/octet-stream
