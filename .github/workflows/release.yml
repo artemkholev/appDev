@@ -37,20 +37,14 @@ jobs:
     - name: Create Binary File
       run: npm run pkg
 
-    - name: List dist Directory for Debugging
-      run: ls -R dist
-
-    - name: Zip App
+    - name: Archive production artifacts
       run: |
-        zip -r myapp.zip dist
-        ls -l myapp.zip  # Verify the zip file was created
+        mkdir -p release
+        zip -r release/release.zip dist/
+      shell: bash
 
-    - name: List Current Directory for Debugging
-      run: ls -R
-
-    - name: Get current date and time
-      id: datetime
-      run: echo "RELEASE_TAG=release-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+    - name: Verify release artifact
+      run: ls -la release/
 
     - name: Create release
       id: create_release
