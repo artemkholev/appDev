@@ -17,40 +17,31 @@ jobs:
       repository-projects: write
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Format
-        run: crystal tool format --check
-  coding_standards:
-    runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:latest-alpine
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: shards install
-      - name: Ameba
-        run: ./bin/ameba
-  test_latest:
-    runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:latest-alpine
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: apk add --update jq
-      - name: Build
-        run: shards build --production
-      - name: Specs
-        run: crystal spec --order random --error-on-warnings
-  test_nightly:
-    runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:nightly-alpine
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Dependencies
-        run: apk add --update jq
-      - name: Build
-        run: shards build --production
-      - name: Specs
-        run: crystal spec --order random --error-on-warnings
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Vue.js App
+      run: npm run build
+
+    - name: Zip App
+      run: zip -r myapp.zip dist/*
+
+    - name: Create Binary File (if needed)
+      run: # Add commands to generate binary file
+
+    - name: Upload Release Assets
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./myapp.zip
+        asset_name: myapp.zip
+        asset_content_type: application/zip
+        github_token: ${{ secrets.GITHUB_TOKEN }}
