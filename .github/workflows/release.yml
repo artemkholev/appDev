@@ -31,22 +31,28 @@ jobs:
     - name: Build Vue.js App
       run: npm run build
 
+    - name: List Contents of dist Directory
+      run: ls -R dist
+
     - name: Create Binary File
       run: |
-        # Since Vue.js projects typically generate JavaScript bundles,
-        # we can treat the main bundle as our binary file
-        mv dist/js binaryfile.js
+        # Ensure this path matches your actual bundle location
+        mv dist/js/app.js binaryfile.js
+      shell: bash
 
     - name: Zip App
       run: |
         zip -r myapp.zip dist
+      shell: bash
 
-    - name: List Directory for Debugging
+    - name: List Contents for Debugging
       run: ls -R
+      shell: bash
 
     - name: Get current date and time
       id: datetime
       run: echo "RELEASE_TAG=release-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+      shell: bash
 
     - name: Create Release
       id: create_release
