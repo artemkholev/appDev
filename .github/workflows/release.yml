@@ -68,10 +68,10 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: |
           myapp.zip
-          my-vue-app
+          dist/my-vue-app-linux  # Adjust the path based on your pkg output
         asset_name: |
           myapp.zip
-          my-vue-app
+          my-vue-app-linux  # Adjust the name based on your pkg output
         asset_content_type: |
           application/zip
           application/octet-stream
