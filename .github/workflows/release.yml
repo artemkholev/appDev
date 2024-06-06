@@ -31,20 +31,27 @@ jobs:
     - name: Build Vue.js App
       run: npm run build
 
+    - name: Create Binary File
+      run: |
+        # Replace this command with your actual command to generate the binary file
+        echo "This is a placeholder for generating the binary file" > binaryfile.exe
+
     - name: Zip App
       run: |
         zip -r myapp.zip dist/*
 
-    - name: Create Binary File (if needed)
-      run: |
-        # Add commands to generate binary file
-
     - name: Upload Release Assets
-      id: upload-release-assets
+      id: upload-assets
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./myapp.zip
-        asset_name: myapp.zip
-        asset_content_type: application/zip
+        asset_path: |
+          myapp.zip
+          binaryfile.exe
+        asset_name: |
+          myapp.zip
+          binaryfile.exe
+        asset_content_type: |
+          application/zip
+          application/octet-stream
         github_token: ${{ secrets.GITHUB_TOKEN }}
