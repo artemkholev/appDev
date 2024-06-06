@@ -52,31 +52,52 @@ jobs:
       id: datetime
       run: echo "RELEASE_TAG=release-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
-    - name: Create Release
+    - name: Create release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.RELEASE_TAG }}
-        release_name: Release ${{ env.RELEASE_TAG }}
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
         body: |
-          Release notes for ${{ env.RELEASE_TAG }}
+          Changes in this release:
+          - List your changes here
         draft: false
         prerelease: false
 
-    - name: Upload Release Assets
-      id: upload-assets
+    - name: Upload release assets (dist)
       uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: |
-          myapp.zip
-          dist/my-vue-app-linux
-        asset_name: |
-          myapp.zip
-          my-vue-app-linux
-        asset_content_type: |
-          application/zip
-          application/octet-stream
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        asset_path: ./release/release.zip
+        asset_name: release.zip
+        asset_content_type: application/zip
+
+    - name: Upload release assets (binary)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/my-vue-app-linux
+        asset_name: binaryfile.bin
+        asset_content_type: application/octet-stream
+
+    # - name: Upload Release Assets
+    #   id: upload-assets
+    #   uses: actions/upload-release-asset@v1
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: |
+    #       myapp.zip
+    #       dist/my-vue-app-linux
+    #     asset_name: |
+    #       myapp.zip
+    #       my-vue-app-linux
+    #     asset_content_type: |
+    #       application/zip
+    #       application/octet-stream
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
