@@ -68,10 +68,10 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: |
           myapp.zip
-          my-vue-app-linux  # Replace with actual binary names for different platforms if needed
+          my-vue-app
         asset_name: |
           myapp.zip
-          my-vue-app-linux  # Replace with actual binary names for different platforms if needed
+          my-vue-app
         asset_content_type: |
           application/zip
           application/octet-stream
