@@ -31,8 +31,14 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      - name: Create binary
-        run: npm run pkg
+      - name: Create binary for Linux
+        run: pkg server.js --out-path dist --targets node16-linux-x64
+
+      - name: Create binary for macOS
+        run: pkg server.js --out-path dist --targets node16-macos-x64
+
+      - name: Create binary for Windows
+        run: pkg server.js --out-path dist --targets node16-win-x64
 
       - name: Verify binary files
         run: ls -la dist/
