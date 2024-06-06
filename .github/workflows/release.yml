@@ -37,11 +37,15 @@ jobs:
     - name: Create Binary File
       run: npm run pkg
 
+    - name: List dist Directory for Debugging
+      run: ls -R dist
+
     - name: Zip App
       run: |
         zip -r myapp.zip dist
+        ls -l myapp.zip  # Verify the zip file was created
 
-    - name: List Contents for Debugging
+    - name: List Current Directory for Debugging
       run: ls -R
 
     - name: Get current date and time
@@ -68,10 +72,10 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: |
           myapp.zip
-          dist/my-vue-app-linux  # Adjust the path based on your pkg output
+          dist/my-vue-app-linux
         asset_name: |
           myapp.zip
-          my-vue-app-linux  # Adjust the name based on your pkg output
+          my-vue-app-linux
         asset_content_type: |
           application/zip
           application/octet-stream
