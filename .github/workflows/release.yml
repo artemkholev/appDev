@@ -17,41 +17,15 @@ jobs:
       repository-projects: write
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
-    - name: Install Dependencies
-      run: npm install
-
-    - name: Build Vue.js App
-      run: npm run build
-
-    - name: Create Binary File
-      run: |
-        # Replace this command with your actual command to generate the binary file
-        echo "This is a placeholder for generating the binary file" > binaryfile.exe
-
-    - name: Zip App
-      run: |
-        zip -r myapp.zip dist/*
-
-    - name: Upload Release Assets
-      id: upload-assets
-      uses: actions/upload-release-asset@v1
+    - uses: actions/checkout@v4
+    - name: Build
+      run: npm run build --production --release --static --no-debug --link-flags="-s -Wl,-z,relro,-z,now"
+    - name: Upload
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: |
-          myapp.zip
-          binaryfile.exe
-        asset_name: |
-          myapp.zip
-          binaryfile.exe
-        asset_content_type: |
-          application/zip
-          application/octet-stream
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        asset_path: ./bin/oq
+        asset_name: oq-${{ github.event.release.tag_name }}-linux-x86_64
+        asset_content_type: binary/octet-stream
