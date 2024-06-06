@@ -39,7 +39,10 @@ jobs:
 
     - name: Zip App
       run: |
-        zip -r myapp.zip dist/*
+        zip -r myapp.zip dist
+
+    - name: List Directory for Debugging
+      run: ls -R
 
     - name: Create Release
       id: create_release
