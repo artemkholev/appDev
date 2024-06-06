@@ -49,21 +49,15 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Verify Linux binary file
-        run: test -f ./dist/vue-app-linux
-
       - name: Upload release assets (binary for Linux)
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/vue-app-linux
-          asset_name: vue-app-linux
+          asset_path: ./dist/server-linux
+          asset_name: server-linux
           asset_content_type: application/octet-stream
-
-      - name: Verify macOS binary file
-        run: test -f ./dist/vue-app-macos
 
       - name: Upload release assets (binary for macOS)
         uses: actions/upload-release-asset@v1
@@ -71,12 +65,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/vue-app-macos
-          asset_name: vue-app-macos
+          asset_path: ./dist/server-macos
+          asset_name: server-macos
           asset_content_type: application/octet-stream
-
-      - name: Verify Windows binary file
-        run: test -f ./dist/vue-app-win.exe
 
       - name: Upload release assets (binary for Windows)
         uses: actions/upload-release-asset@v1
@@ -84,6 +75,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/vue-app-win.exe
-          asset_name: vue-app-win.exe
+          asset_path: ./dist/server-win.exe
+          asset_name: server-win.exe
           asset_content_type: application/octet-stream
