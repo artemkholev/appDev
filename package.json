@@ -1,6 +1,7 @@
 {
-  "name": "project-with-tests",
-  "version": "0.1.0",
+  "name": "my-vue-app",
+  "version": "1.0.0",
+  "main": "index.js",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
