@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "pkg": "pkg .",
+    "pkg": "pkg . --out-path dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
