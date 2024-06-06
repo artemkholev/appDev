@@ -17,72 +17,40 @@ jobs:
       repository-projects: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build the project
-        run: npm run build
-
-      - name: Create binary for Linux
-        run: pkg server.js --out-path dist --targets node16-linux-x64
-
-      - name: Create binary for macOS
-        run: pkg server.js --out-path dist --targets node16-macos-x64
-
-      - name: Create binary for Windows
-        run: pkg server.js --out-path dist --targets node16-win-x64
-
-      - name: Verify binary files
-        run: ls -la dist/
-
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          body: |
-            Changes in this release:
-            - List your changes here
-          draft: false
-          prerelease: false
-
-      - name: Upload release assets (binary for Linux)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/server-linux
-          asset_name: server-linux
-          asset_content_type: application/octet-stream
-
-      - name: Upload release assets (binary for macOS)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/server-macos
-          asset_name: server-macos
-          asset_content_type: application/octet-stream
-
-      - name: Upload release assets (binary for Windows)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/server-win.exe
-          asset_name: server-win.exe
-          asset_content_type: application/octet-stream
+      - uses: actions/checkout@v2
+      - name: Format
+        run: crystal tool format --check
+  coding_standards:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal:latest-alpine
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: shards install
+      - name: Ameba
+        run: ./bin/ameba
+  test_latest:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal:latest-alpine
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: apk add --update jq
+      - name: Build
+        run: shards build --production
+      - name: Specs
+        run: crystal spec --order random --error-on-warnings
+  test_nightly:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal:nightly-alpine
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: apk add --update jq
+      - name: Build
+        run: shards build --production
+      - name: Specs
+        run: crystal spec --order random --error-on-warnings
