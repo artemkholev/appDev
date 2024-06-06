@@ -44,16 +44,20 @@ jobs:
     - name: List Directory for Debugging
       run: ls -R
 
+    - name: Get current date and time
+      id: datetime
+      run: echo "RELEASE_TAG=release-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v1.0.0  # Adjust the tag name as needed
-        release_name: Release v1.0.0  # Adjust the release name as needed
+        tag_name: ${{ env.RELEASE_TAG }}
+        release_name: Release ${{ env.RELEASE_TAG }}
         body: |
-          Release notes for v1.0.0
+          Release notes for ${{ env.RELEASE_TAG }}
         draft: false
         prerelease: false
 
