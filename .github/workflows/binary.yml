@@ -1,7 +1,5 @@
-on:
-  release:
-    types: [created]
-name: Handle Release
+name: binary
+"on": push
 jobs:
   generate:
     name: Create release-artifacts
