@@ -35,7 +35,7 @@ jobs:
       run: |
         # Since Vue.js projects typically generate JavaScript bundles,
         # we can treat the main bundle as our binary file
-        mv dist/app.js binaryfile.js
+        mv dist/js binaryfile.js
 
     - name: Zip App
       run: |
